@@ -850,7 +850,7 @@
             {
                 id: "caipirinha",
                 title: "Caipirinha",
-                badge: "TOP 1",
+                badge: null,
                 desc: "Monte sua Caipirinha com a bebida base e o fruto de sua preferência.",
                 img: "https://i.postimg.cc/cH8K46k7/Gemini-Generated-Image-84kf2j84kf2j84kf.png",
                 tags: ["Copão de 550ml", "Cachaça / Saquê / Vodka / Vinho Branco", "Frutas Frescas"],
@@ -882,7 +882,7 @@
             {
                 id: "jack",
                 title: "Whisky Jack Daniel's",
-                badge: null,
+                badge: "TOP 1 ENTRE OS HOMENS!",
                 desc: "Escolha o rótulo Jack Daniel's, o gelo de sabor e o energético para compor seu copão.",
                 img: "https://i.postimg.cc/q7FL5hC9/Gemini-Generated-Image-7azc127azc127ajfnnczc.png",
                 tags: ["Copão de 550ml", "Gelo de Sabor", "Tradicional / Maçã Verde / Mel / Fire / Blackberry"],
@@ -896,8 +896,8 @@
                             { name: "Tradicional (Old No. 7)", price: 0.00, popular: false, soldOut: false },
                             { name: "Apple (Maçã verde)", price: 2.00, popular: false, soldOut: false },
                             { name: "Honey (Mel)", price: 0.00, popular: false, soldOut: false },
-                            { name: "Fire (Pimenta/Canela)", price: 0.00, popular: false, soldOut: false },
-                            { name: "Blackberry (Amora) NOVO", price: 4.00, popular: false, soldOut: false }
+                            { name: "Fire (Pimenta/Canela)", price: 0.00, popular: false, soldOut: true },
+                            { name: "Blackberry (Amora) NOVO", price: 4.00, popular: false, soldOut: true }
                         ]
                     },
                     {
@@ -915,9 +915,31 @@
                         title: "Escolha o Energético",
                         options: [
                             { name: "Tradicional", price: 0.00, popular: false, soldOut: false },
-                            { name: "Coco", price: 0.00, popular: false, soldOut: false },
+                            { name: "Coco e Acaí", price: 0.00, popular: false, soldOut: false },
                             { name: "Melancia", price: 0.00, popular: false, soldOut: false },
                             { name: "Maçã Verde", price: 0.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "soju",
+                title: "Soju Drink Coreano Exclusivo",
+                badge: "TOP 1 ENTRE AS MULHERES!",
+                desc: "O drink refrescante e autêntico coreano com misturas exclusivas de Soju com frutas.",
+                img: "https://i.postimg.cc/d35D5dhh/Chat-GPT-Image-11-de-ago-de-2026-20-38-30.png",
+                tags: ["Copão de 550ml", "Combinações Especiais", "Coreano"],
+                buttonText: "Escolher",
+                basePrice: 45.00,
+                groups: [
+                    {
+                        key: "combination",
+                        title: "Escolha a Saborosa Combinação",
+                        options: [
+                            { name: "Soju de Morango com Maracujá", price: 0.00, popular: false, soldOut: false },
+                            { name: "Soju de Maçã verde com Morango", price: 0.00, popular: false, soldOut: false },
+                            { name: "Soju de Blueberry com Limão", price: 2.00, popular: false, soldOut: true },
+                            { name: "Soju de Uva com Kiwi", price: 2.00, popular: false, soldOut: true }
                         ]
                     }
                 ]
@@ -939,7 +961,7 @@
                             { name: "Tradicional (Dry)", price: 0.00, popular: false, soldOut: false },
                             { name: "Watermelon (Melancia)", price: 2.00, popular: false, soldOut: false },
                             { name: "Strawberry (Morango)", price: 2.00, popular: false, soldOut: false },
-                            { name: "Sicilian Lemon (Limão Siciliano)", price: 2.00, popular: false, soldOut: false }
+                            { name: "Sicilian Lemon (Limão Siciliano)", price: 2.00, popular: false, soldOut: true }
                         ]
                     },
                     {
@@ -957,31 +979,9 @@
                         title: "Escolha o Energético",
                         options: [
                             { name: "Tradicional", price: 0.00, popular: false, soldOut: false },
-                            { name: "Coco", price: 0.00, popular: false, soldOut: false },
+                            { name: "Coco e Acaí", price: 0.00, popular: false, soldOut: false },
                             { name: "Melancia", price: 0.00, popular: false, soldOut: false },
                             { name: "Maçã Verde", price: 0.00, popular: false, soldOut: false }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: "soju",
-                title: "Soju Drink Coreano",
-                badge: "TOP 1 ENTRE AS MULHERES",
-                desc: "O drink refrescante e autêntico coreano com misturas exclusivas de Soju com frutas.",
-                img: "https://i.postimg.cc/d35D5dhh/Chat-GPT-Image-11-de-ago-de-2026-20-38-30.png",
-                tags: ["Copão de 550ml", "Combinações Especiais", "Coreano"],
-                buttonText: "Montar",
-                basePrice: 30.00,
-                groups: [
-                    {
-                        key: "combination",
-                        title: "Escolha a Saborosa Combinação",
-                        options: [
-                            { name: "Soju de Morango com Maracujá", price: 0.00, popular: false, soldOut: false },
-                            { name: "Soju de Maçã verde com Morango", price: 0.00, popular: false, soldOut: false },
-                            { name: "Soju de Blueberry com Limão", price: 2.00, popular: false, soldOut: false },
-                            { name: "Soju de Uva com Kiwi", price: 2.00, popular: false, soldOut: false }
                         ]
                     }
                 ]
@@ -990,7 +990,7 @@
                 id: "cervejas",
                 title: "Cervejas",
                 badge: null,
-                desc: "Cervejas premium puro malte 100% natural.",
+                desc: "Cervejas: Heineken, Budweiser, Stella Artois, Corona.",
                 img: "https://i.postimg.cc/Pr2Cqf7P/Chat-GPT-Image-12-de-ago-de-2026-11-15-49.png",
                 tags: ["Long Neck", "Cerveja", "Gelada"],
                 buttonText: "Escolher",
@@ -1003,7 +1003,7 @@
                             { name: "Heineken Long Neck", price: 12.00, popular: false, soldOut: false },
                             { name: "Budweiser Long Neck", price: 10.00, popular: false, soldOut: false },
                             { name: "Stella Artois Long Neck", price: 10.00, popular: false, soldOut: false },
-                            { name: "Corona c/ limão", price: 8.00, popular: false, soldOut: false }
+                            { name: "Corona c/ limão", price: 12.00, popular: false, soldOut: false }
                         ]
                     }
                 ]
@@ -1024,8 +1024,8 @@
                         options: [
                             { name: "Amendoim Japonês", price: 8.00, popular: false, soldOut: false },
                             { name: "Batata Ruffles 68g", price: 10.00, popular: false, soldOut: false },
-                            { name: "Ovinho Amendoim", price: 8.00, popular: false, soldOut: false },
-                            { name: "Mix de Castanhas", price: 12.00, popular: false, soldOut: false }
+                            { name: "Ovinhos de Amendoim", price: 8.00, popular: false, soldOut: false },
+                            { name: "Doritos", price: 12.00, popular: false, soldOut: false }
                         ]
                     }
                 ]
