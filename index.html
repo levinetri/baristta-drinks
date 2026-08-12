@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Baristta Drinks - Cardápio Online</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b0b0b;
+            --card-bg: #141414;
+            --card-border: #262626;
+            --accent-gold: #5E005E;
+            --accent-gold-hover: #AB2F52;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --chalk-white: #f5f5f7;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --font-title: 'Cinzel', serif;
+            --font-body: 'Montserrat', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 110px;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(94, 0, 94, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 24px 16px 16px 16px;
+            border-bottom: 1px solid var(--card-border);
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .brand-frame {
+            border: 2px solid var(--accent-gold);
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            margin-bottom: 12px;
+        }
+
+        .brand-title {
+            font-family: var(--font-title);
+            font-size: 26px;
+            letter-spacing: 3px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--chalk-white);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .badge-copao {
+            display: inline-block;
+            background: linear-gradient(135deg, #E55D4A 0%, #AB2F52 100%);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            box-shadow: 0 2px 10px rgba(171, 47, 82, 0.4);
+        }
+
+        .badge-popular {
+            background: linear-gradient(135deg, #FF9900 0%, #FF1A1A 100%);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(255, 100, 0, 0.4);
+            margin-left: 6px;
+        }
+
+        .drink-card.sold-out {
+            opacity: 0.6;
+            filter: grayscale(0.4);
+        }
+
+        .btn-custom.btn-disabled,
+        .btn-custom:disabled {
+            background: #2a2a2a !important;
+            color: #777777 !important;
+            cursor: not-allowed !important;
+            box-shadow: none !important;
+            pointer-events: none !important;
+            border: 1px solid #333 !important;
+        }
+
+        .option-card.sold-out {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+            border-color: #2a2a2a !important;
+            background: #141414 !important;
+        }
+
+        .tag-sold-out {
+            display: block;
+            font-size: 9px;
+            color: var(--danger);
+            margin-top: 2px;
+            font-weight: 700;
+        }
+
+        /* SECTION TITLES */
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin: 24px 0 16px 0;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-title);
+            font-size: 18px;
+            color: var(--chalk-white);
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .section-header .line {
+            height: 1px;
+            background: linear-gradient(90deg, var(--card-border) 0%, transparent 100%);
+            width: 100%;
+        }
+
+        /* MENU CARDS */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .drink-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .drink-card:active {
+            transform: scale(0.99);
+        }
+
+        .drink-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gold);
+        }
+
+        .drink-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .drink-img-container {
+            width: 105px;
+            height: 105px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            background-color: #1a1a1a;
+            position: relative;
+        }
+
+        .drink-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .drink-card:hover .drink-img {
+            transform: scale(1.05);
+        }
+
+        .drink-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .drink-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .drink-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: #E55D4A;
+            display: inline-block;
+        }
+
+        .drink-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .drink-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            font-size: 9px;
+            background: #1f1f1f;
+            color: #ccc;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid #2d2d2d;
+        }
+
+        .btn-custom {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #E55D4A 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: background 0.3s;
+        }
+
+        .btn-custom:hover {
+            background: linear-gradient(135deg, var(--accent-gold-hover) 0%, #E55D4A 100%);
+        }
+
+        /* MODAL CUSTOMIZER */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #121212;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-top: 1px solid var(--accent-gold);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: var(--font-title);
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .option-group {
+            margin-bottom: 22px;
+        }
+
+        .option-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--chalk-white);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-title span.required {
+            font-size: 10px;
+            color: #E55D4A;
+            border: 1px solid rgba(229, 93, 74, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .option-card {
+            background: #1c1c1c;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .option-card.is-popular {
+            border-color: #FF9900 !important;
+        }
+
+        .option-card.is-popular::after {
+            content: '🔥TOP 1';
+            position: absolute;
+            top: -8px;
+            right: 4px;
+            background: linear-gradient(135deg, #FF9900 0%, #E55D4A 100%);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .option-card input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .option-card label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ddd;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+        }
+
+        .option-card.selected {
+            border-color: var(--accent-gold-hover);
+            background: rgba(171, 47, 82, 0.2);
+        }
+
+        .option-card.selected label {
+            color: #fff;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 15px;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-qty {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--accent-gold-hover);
+            background: transparent;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .qty-val {
+            font-size: 16px;
+            font-weight: 700;
+            width: 30px;
+            text-align: center;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--card-border);
+            background: #141414;
+        }
+
+        /* CART BOTTOM BAR */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--accent-gold);
+            padding: 12px 20px;
+            z-index: 900;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
+            transition: transform 0.2s ease;
+        }
+
+        .cart-bar-inner {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cart-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-total {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .btn-view-cart {
+            background: linear-gradient(135deg, #5E005E 0%, #E55D4A 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(94, 0, 94, 0.3);
+        }
+
+        /* CHECKOUT MODAL */
+        .checkout-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--card-border);
+        }
+
+        .checkout-item-details {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .checkout-item-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .checkout-item-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        .checkout-item-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-align: right;
+        }
+
+        .btn-remove-item {
+            color: var(--danger);
+            background: none;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-top: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: #1c1c1c;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            pointer-events: auto !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-gold-hover);
+        }
+
+        .form-control.input-error {
+            border-color: var(--danger) !important;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .form-error-banner {
+            display: none;
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid var(--danger);
+            color: #ff8b80;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .radio-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .radio-card {
+            background: #1c1c1c;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .radio-card.selected {
+            border-color: var(--accent-gold-hover);
+            background: rgba(171, 47, 82, 0.2);
+            color: var(--text-main);
+        }
+
+        .empty-cart-msg {
+            text-align: center;
+            padding: 30px 10px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .empty-cart-msg i {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .modal-sm {
+            max-height: 50vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <div class="brand-frame">
+                <div class="brand-title">Baristta</div>
+                <div class="brand-subtitle">DRINKS</div>
+            </div>
+            <div>
+                <span class="badge-copao"><i class="fa-solid fa-glass-water-droplet"></i> MONTE SEU COPÃO DE 550ML</span>
+            </div>
+        </header>
+
+        <!-- SECTION TITLE -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-martini-glass-citrus" style="color: #E55D4A;"></i> Nossas Opções</h2>
+            <div class="line"></div>
+        </div>
+
+        <!-- MENU GRID (CARREGADO DINAMICAMENTE PELO JS) -->
+        <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- STICKY CART FOOTER BAR -->
+    <div class="cart-bar" id="cartBar">
+        <div class="cart-bar-inner">
+            <div class="cart-info">
+                <span class="cart-count" id="cartCount">0 itens selecionados</span>
+                <span class="cart-total" id="cartTotal">R$ 0,00</span>
+            </div>
+            <button class="btn-view-cart" onclick="openCheckoutModal()">
+                <i class="fa-brands fa-whatsapp"></i> Ver Pedido
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOMIZER DRINK -->
+    <div class="modal-overlay" id="customizerModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title" id="modalDrinkTitle">Montar Drink</div>
+                <button class="btn-close" onclick="closeCustomizer()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modalDrinkBody">
+                <!-- Conteúdo dinâmico carregado pelo JS -->
+            </div>
+            <div class="modal-footer">
+                <div class="quantity-control">
+                    <button class="btn-qty" onclick="changeQty(-1)">-</button>
+                    <span class="qty-val" id="itemQty">1</span>
+                    <button class="btn-qty" onclick="changeQty(1)">+</button>
+                </div>
+                <button class="btn-custom" style="margin-top: 12px;" onclick="addCurrentItemToCart()">
+                    <i class="fa-solid fa-cart-plus"></i> Adicionar ao Pedido - <span id="modalItemPrice">R$ 0,00</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHECKOUT / WHATSAPP -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-receipt" style="color: #E55D4A;"></i> Seu Pedido</div>
+                <button class="btn-close" onclick="closeCheckout()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="checkoutList">
+                    <!-- Itens listados aqui -->
+                </div>
+
+                <div id="checkoutForm" style="margin-top: 20px;">
+                    <div style="font-size: 13px; font-weight: 700; color: #E55D4A; margin-bottom: 10px; border-bottom: 1px solid var(--card-border); padding-bottom: 6px;">
+                        Dados para Entrega no Condomínio
+                    </div>
+
+                    <div class="form-error-banner" id="formErrorMsg">
+                        <i class="fa-solid fa-circle-exclamation"></i> Por favor, preencha os campos obrigatórios (*).
+                    </div>
+
+                    <div class="form-group">
+                        <label>Seu Nome *</label>
+                        <input type="text" class="form-control" id="custName" placeholder="Ex: João Silva" oninput="clearInputError(this)">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;" class="form-group">
+                       <div>
+                            <label>Apartamento *</label>
+                            <input type="text" class="form-control" id="custApto" placeholder="Ex: 104" oninput="clearInputError(this)">
+                        </div>
+                        <div>
+                            <label>Bloco / Torre *</label>
+                            <input type="text" class="form-control" id="custBlock" placeholder="Ex: Bloco A" oninput="clearInputError(this)">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Observações do Pedido (Opcional)</label>
+                        <input type="text" class="form-control" id="custObs" placeholder="Ex: Sem açúcar, entregar na portaria...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Forma de Pagamento</label>
+                        <div class="radio-options">
+                            <div class="radio-card selected" onclick="selectPayment('PIX', this)">PIX</div>
+                            <div class="radio-card" onclick="selectPayment('Cartão', this)">Cartão <span style="font-size: 8px; display: block; opacity: 0.7; margin-top: 2px;">(+5%)</span></div>
+                            <div class="radio-card" onclick="selectPayment('Dinheiro', this)">Dinheiro</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-view-cart" style="width: 100%; justify-content: center; font-size: 15px; padding: 14px;" onclick="sendWhatsAppOrder()">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 18px;"></i> Enviar Pedido via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PHONE CONFIG -->
+    <div class="modal-overlay" id="phoneModal">
+        <div class="modal-container modal-sm">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-phone" style="color: #E55D4A;"></i> WhatsApp de Vendas</div>
+                <button class="btn-close" onclick="closePhoneModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                    Digite abaixo o número do seu WhatsApp (com DDD) que receberá os pedidos:
+                </p>
+                <div class="form-group">
+                    <label>Número do WhatsApp</label>
+                    <input type="tel" class="form-control" id="sellerPhoneInput" placeholder="Ex: 5511999999999">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-custom" onclick="saveSellerPhone()">
+                    <i class="fa-solid fa-check"></i> Salvar Número
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        /* 
+           ==========================================================================
+           FONTE ÚNICA DE DADOS DO CARDÁPIO (MENU_DATA)
+           Para adicionar ou alterar itens, edite apenas a estrutura abaixo!
+           ==========================================================================
+        */
+        const MENU_DATA = [
+            {
+                id: "caipirinha",
+                title: "Caipirinha",
+                badge: "TOP 1",
+                desc: "Monte sua Caipirinha com a bebida base e o fruto de sua preferência.",
+                img: "https://i.postimg.cc/cH8K46k7/Gemini-Generated-Image-84kf2j84kf2j84kf.png",
+                tags: ["Copão de 550ml", "Cachaça / Saquê / Vodka / Vinho Branco", "Frutas Frescas"],
+                buttonText: "Montar",
+                basePrice: 0.00,
+                groups: [
+                    {
+                        key: "base",
+                        title: "Escolha a Bebida Base",
+                        options: [
+                            { name: "Cachaça", price: 22.00, popular: false, soldOut: false },
+                            { name: "Saquê", price: 25.00, popular: false, soldOut: false },
+                            { name: "Vodka", price: 24.00, popular: false, soldOut: false },
+                            { name: "Vinho Branco", price: 22.00, popular: false, soldOut: false }
+                        ]
+                    },
+                    {
+                        key: "flavor",
+                        title: "Escolha a Fruta",
+                        options: [
+                            { name: "Limão", price: 0.00, popular: false, soldOut: false },
+                            { name: "Morango", price: 2.00, popular: false, soldOut: false },
+                            { name: "Maracujá", price: 2.00, popular: false, soldOut: false },
+                            { name: "Kiwi", price: 3.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "jack",
+                title: "Whisky Jack Daniel's",
+                badge: null,
+                desc: "Escolha o rótulo Jack Daniel's, o gelo de sabor e o energético para compor seu copão.",
+                img: "https://i.postimg.cc/q7FL5hC9/Gemini-Generated-Image-7azc127azc127ajfnnczc.png",
+                tags: ["Copão de 550ml", "Gelo de Sabor", "Tradicional / Maçã Verde / Mel / Fire / Blackberry"],
+                buttonText: "Montar",
+                basePrice: 32.00,
+                groups: [
+                    {
+                        key: "variety",
+                        title: "Escolha o Jack Daniel's",
+                        options: [
+                            { name: "Tradicional (Old No. 7)", price: 0.00, popular: false, soldOut: false },
+                            { name: "Apple (Maçã verde)", price: 2.00, popular: false, soldOut: false },
+                            { name: "Honey (Mel)", price: 0.00, popular: false, soldOut: false },
+                            { name: "Fire (Pimenta/Canela)", price: 0.00, popular: false, soldOut: false },
+                            { name: "Blackberry (Amora) NOVO", price: 4.00, popular: false, soldOut: false }
+                        ]
+                    },
+                    {
+                        key: "ice",
+                        title: "Escolha o Gelo de Sabor",
+                        options: [
+                            { name: "Gelo de Coco", price: 0.00, popular: false, soldOut: false },
+                            { name: "Gelo de Maracujá", price: 0.00, popular: false, soldOut: false },
+                            { name: "Gelo de Melancia", price: 0.00, popular: false, soldOut: false },
+                            { name: "Gelo Tradicional", price: 0.00, popular: false, soldOut: false }
+                        ]
+                    },
+                    {
+                        key: "energy",
+                        title: "Escolha o Energético",
+                        options: [
+                            { name: "Tradicional", price: 0.00, popular: false, soldOut: false },
+                            { name: "Coco", price: 0.00, popular: false, soldOut: false },
+                            { name: "Melancia", price: 0.00, popular: false, soldOut: false },
+                            { name: "Maçã Verde", price: 0.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "gin",
+                title: "Gin Especial",
+                badge: null,
+                desc: "Gin combinado com gelo saborizado e energético da sua escolha.",
+                img: "https://i.postimg.cc/brwwSJ3F/Chat-GPT-Image-11-de-ago-de-2026-20-34-50.png",
+                tags: ["Copão de 550ml", "Energético", "Tradicional / Melancia / Morango / Sunset"],
+                buttonText: "Montar",
+                basePrice: 28.00,
+                groups: [
+                    {
+                        key: "variety",
+                        title: "Escolha o Gin",
+                        options: [
+                            { name: "Tradicional (Dry)", price: 0.00, popular: false, soldOut: false },
+                            { name: "Watermelon (Melancia)", price: 2.00, popular: false, soldOut: false },
+                            { name: "Strawberry (Morango)", price: 2.00, popular: false, soldOut: false },
+                            { name: "Sicilian Lemon (Limão Siciliano)", price: 2.00, popular: false, soldOut: false }
+                        ]
+                    },
+                    {
+                        key: "ice",
+                        title: "Escolha o Gelo de Sabor",
+                        options: [
+                            { name: "Gelo de Coco", price: 0.00, popular: false, soldOut: false },
+                            { name: "Gelo de Maracujá", price: 0.00, popular: false, soldOut: false },
+                            { name: "Gelo de Melancia", price: 0.00, popular: false, soldOut: false },
+                            { name: "Gelo Tradicional", price: 0.00, popular: false, soldOut: false }
+                        ]
+                    },
+                    {
+                        key: "energy",
+                        title: "Escolha o Energético",
+                        options: [
+                            { name: "Tradicional", price: 0.00, popular: false, soldOut: false },
+                            { name: "Coco", price: 0.00, popular: false, soldOut: false },
+                            { name: "Melancia", price: 0.00, popular: false, soldOut: false },
+                            { name: "Maçã Verde", price: 0.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "soju",
+                title: "Soju Drink Coreano",
+                badge: "TOP 1 ENTRE AS MULHERES",
+                desc: "O drink refrescante e autêntico coreano com misturas exclusivas de Soju com frutas.",
+                img: "https://i.postimg.cc/d35D5dhh/Chat-GPT-Image-11-de-ago-de-2026-20-38-30.png",
+                tags: ["Copão de 550ml", "Combinações Especiais", "Coreano"],
+                buttonText: "Montar",
+                basePrice: 30.00,
+                groups: [
+                    {
+                        key: "combination",
+                        title: "Escolha a Saborosa Combinação",
+                        options: [
+                            { name: "Soju de Morango com Maracujá", price: 0.00, popular: false, soldOut: false },
+                            { name: "Soju de Maçã verde com Morango", price: 0.00, popular: false, soldOut: false },
+                            { name: "Soju de Blueberry com Limão", price: 2.00, popular: false, soldOut: false },
+                            { name: "Soju de Uva com Kiwi", price: 2.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "cervejas",
+                title: "Cervejas",
+                badge: null,
+                desc: "Cervejas premium puro malte 100% natural.",
+                img: "https://i.postimg.cc/Pr2Cqf7P/Chat-GPT-Image-12-de-ago-de-2026-11-15-49.png",
+                tags: ["Long Neck", "Cerveja", "Gelada"],
+                buttonText: "Escolher",
+                basePrice: 0.00,
+                groups: [
+                    {
+                        key: "combination",
+                        title: "Confirme sua Escolha",
+                        options: [
+                            { name: "Heineken Long Neck", price: 12.00, popular: false, soldOut: false },
+                            { name: "Budweiser Long Neck", price: 10.00, popular: false, soldOut: false },
+                            { name: "Stella Artois Long Neck", price: 10.00, popular: false, soldOut: false },
+                            { name: "Skol Lata", price: 8.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "salgadinhos",
+                title: "Salgadinhos",
+                badge: null,
+                desc: "Petiscos e salgadinhos variados.",
+                img: "https://http2.mlstatic.com/D_NQ_NP_2X_987261-MLB110745714216_052026-F.webp",
+                tags: ["Salgadinhos"],
+                buttonText: "Escolher",
+                basePrice: 0.00,
+                groups: [
+                    {
+                        key: "combination",
+                        title: "Confirme sua Escolha",
+                        options: [
+                            { name: "Amendoim Japonês", price: 8.00, popular: false, soldOut: false },
+                            { name: "Batata Ruffles 68g", price: 10.00, popular: false, soldOut: false },
+                            { name: "Ovinho Amendoim", price: 8.00, popular: false, soldOut: false },
+                            { name: "Mix de Castanhas", price: 12.00, popular: false, soldOut: false }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // ESTADOS DA APLICAÇÃO
+        let cart = [];
+        let currentBuild = null;
+        let currentQty = 1;
+        let paymentMethod = 'PIX';
+        let sellerPhone = localStorage.getItem('baristta_seller_phone') || '5511954345904';
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenuGrid();
+            updateCartBar();
+            document.getElementById('sellerPhoneInput').value = sellerPhone;
+        });
+
+        // HELPER: FORMATAÇÃO DE MOEDA
+        function formatMoney(val) {
+            return `R$ ${val.toFixed(2).replace('.', ',')}`;
+        }
+
+        // CALCULA O MENOR PREÇO POSSÍVEL DE UM ITEM
+        function getMinDrinkPrice(drink) {
+            let minPrice = drink.basePrice || 0;
+            if (drink.groups) {
+                drink.groups.forEach(group => {
+                    const availableOpts = group.options.filter(opt => !opt.soldOut);
+                    if (availableOpts.length > 0) {
+                        const prices = availableOpts.map(opt => (opt.price !== undefined ? opt.price : 0));
+                        minPrice += Math.min(...prices);
+                    }
+                });
+            }
+            return minPrice;
+        }
+
+        // RENDERIZA A LISTA PRINCIPAL DE PRODUTOS DINAMICAMENTE
+        function renderMenuGrid() {
+            const container = document.getElementById('menuGrid');
+            if (!container) return;
+
+            container.innerHTML = MENU_DATA.map(drink => {
+                const minPrice = getMinDrinkPrice(drink);
+                const badgeHtml = drink.badge 
+                    ? `<span class="badge-popular"><i class="fa-solid fa-fire"></i>${drink.badge}</span>` 
+                    : '';
+                const tagsHtml = (drink.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+                const btnText = drink.buttonText || "Montar";
+
+                return `
+                    <div class="drink-card">
+                        <div class="drink-info">
+                            <div class="drink-header">
+                                <div class="drink-name">
+                                    • ${drink.title} 
+                                    ${badgeHtml}
+                                </div>
+                                <div class="drink-price">A partir de ${formatMoney(minPrice)}</div>
+                            </div>
+                            <div class="drink-desc">${drink.desc || ''}</div>
+                            <div class="drink-tags">
+                                ${tagsHtml}
+                            </div>
+                            <button class="btn-custom" onclick="openCustomizer('${drink.id}')">
+                                <i class="fa-solid fa-plus"></i> ${btnText}
+                            </button>
+                        </div>
+                        <div class="drink-img-container">
+                            <img src="${drink.img}" alt="${drink.title}" class="drink-img">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // CONFIGURAÇÃO DO WHATSAPP DE VENDAS
+        function openPhoneModal() {
+            document.getElementById('phoneModal').classList.add('active');
+        }
+
+        function closePhoneModal() {
+            document.getElementById('phoneModal').classList.remove('active');
+        }
+
+        function saveSellerPhone() {
+            const input = document.getElementById('sellerPhoneInput').value.replace(/\D/g, '');
+            if (!input || input.length < 10) {
+                alert('Por favor, insira um número válido com DDD (ex: 5511954345904)');
+                return;
+            }
+            sellerPhone = input;
+            localStorage.setItem('baristta_seller_phone', sellerPhone);
+            closePhoneModal();
+        }
+
+        // CUSTOMIZADOR DE DRINKS
+        function openCustomizer(drinkId) {
+            const drink = MENU_DATA.find(item => item.id === drinkId);
+            if (!drink) return;
+
+            currentQty = 1;
+            document.getElementById('itemQty').innerText = currentQty;
+
+            currentBuild = {
+                id: drink.id,
+                title: drink.title,
+                basePrice: drink.basePrice || 0,
+                unitPrice: 0,
+                selections: {}
+            };
+
+            document.getElementById('modalDrinkTitle').innerText = drink.title;
+            
+            let html = '';
+            drink.groups.forEach((group) => {
+                html += `
+                    <div class="option-group">
+                        <div class="option-title">
+                            ${group.title} <span class="required">Obrigatório</span>
+                        </div>
+                        <div class="options-grid">
+                `;
+
+                let defaultSelected = false;
+
+                group.options.forEach((optObj) => {
+                    const optName = typeof optObj === 'object' ? optObj.name : optObj;
+                    const optPrice = (typeof optObj === 'object' && optObj.price) ? optObj.price : 0;
+                    const isPopular = typeof optObj === 'object' ? optObj.popular : false;
+                    const isSoldOut = typeof optObj === 'object' ? optObj.soldOut : false;
+
+                    let isSelected = false;
+                    if (!defaultSelected && !isSoldOut) {
+                        currentBuild.selections[group.key] = { name: optName, price: optPrice };
+                        defaultSelected = true;
+                        isSelected = true;
+                    }
+
+                    const safeName = optName.replace(/'/g, "\\'");
+
+                    let priceTag = '';
+                    if (optPrice > 0) {
+                        if (drink.basePrice > 0) {
+                            priceTag = `<span style="font-size: 10px; color: #E55D4A; display: block; margin-top: 2px;">(+${formatMoney(optPrice)})</span>`;
+                        } else {
+                            priceTag = `<span style="font-size: 10px; color: #E55D4A; display: block; margin-top: 2px;">${formatMoney(optPrice)}</span>`;
+                        }
+                    }
+
+                    html += `
+                        <div class="option-card ${isSelected ? 'selected' : ''} ${isPopular ? 'is-popular' : ''} ${isSoldOut ? 'sold-out' : ''}" 
+                             ${isSoldOut ? '' : `onclick="selectOption('${group.key}', '${safeName}', ${optPrice}, this)"`}>
+                            <label>
+                                ${optName}
+                                ${priceTag}
+                                ${isSoldOut ? '<span class="tag-sold-out">(Esgotado)</span>' : ''}
+                            </label>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('modalDrinkBody').innerHTML = html;
+            updateModalPrice();
+            document.getElementById('customizerModal').classList.add('active');
+        }
+
+        function closeCustomizer() {
+            document.getElementById('customizerModal').classList.remove('active');
+        }
+
+        function selectOption(groupKey, value, price, element) {
+            currentBuild.selections[groupKey] = { name: value, price: price };
+            const parent = element.parentElement;
+            const cards = parent.querySelectorAll('.option-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            updateModalPrice();
+        }
+
+        function changeQty(delta) {
+            currentQty += delta;
+            if (currentQty < 1) currentQty = 1;
+            document.getElementById('itemQty').innerText = currentQty;
+            updateModalPrice();
+        }
+
+        function updateModalPrice() {
+            if (!currentBuild) return;
+            
+            let calculateUnitPrice = currentBuild.basePrice;
+            Object.values(currentBuild.selections).forEach(sel => {
+                calculateUnitPrice += (sel.price || 0);
+            });
+
+            currentBuild.unitPrice = calculateUnitPrice;
+            const total = calculateUnitPrice * currentQty;
+            document.getElementById('modalItemPrice').innerText = formatMoney(total);
+        }
+
+        function addCurrentItemToCart() {
+            if (!currentBuild) return;
+
+            const cartItem = {
+                id: Date.now(),
+                title: currentBuild.title,
+                unitPrice: currentBuild.unitPrice,
+                qty: currentQty,
+                selections: { ...currentBuild.selections },
+                totalPrice: currentBuild.unitPrice * currentQty
+            };
+
+            cart.push(cartItem);
+            closeCustomizer();
+            updateCartBar();
+            
+            const cartBar = document.getElementById('cartBar');
+            cartBar.style.transform = 'scale(1.02)';
+            setTimeout(() => cartBar.style.transform = 'scale(1)', 200);
+        }
+
+        // GERENCIAMENTO DO CARRINHO
+        function updateCartBar() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
+            document.getElementById('cartCount').innerText = `${totalQty} ${totalQty === 1 ? 'item selecionado' : 'itens selecionados'}`;
+            document.getElementById('cartTotal').innerText = formatMoney(totalPrice);
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio! Adicione ao menos um drink para ver o pedido.');
+                return;
+            }
+
+            renderCheckoutList();
+            document.getElementById('checkoutModal').classList.add('active');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function renderCheckoutList() {
+            const container = document.getElementById('checkoutList');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart-msg">
+                        <i class="fa-solid fa-glass-water"></i>
+                        <p>Nenhum drink adicionado ao pedido.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            cart.forEach((item, idx) => {
+                const details = Object.values(item.selections).map(s => typeof s === 'object' ? s.name : s).join(' • ');
+                html += `
+                    <div class="checkout-item">
+                        <div class="checkout-item-details">
+                            <div class="checkout-item-title">${item.qty}x ${item.title}</div>
+                            <div class="checkout-item-sub">${details}</div>
+                            <button class="btn-remove-item" onclick="removeFromCart(${idx})">
+                                <i class="fa-solid fa-trash"></i> Remover
+                            </button>
+                        </div>
+                        <div class="checkout-item-price">
+                            ${formatMoney(item.totalPrice)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            let total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            if (paymentMethod === 'Cartão') {
+                total *= 1.05;
+            }
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-weight: 800; font-size: 16px; color: var(--text-main);">
+                    <span>TOTAL DO PEDIDO${paymentMethod === 'Cartão' ? ' (+5% Cartão)' : ''}:</span>
+                    <span>${formatMoney(total)}</span>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartBar();
+            renderCheckoutList();
+            if (cart.length === 0) {
+                closeCheckout();
+            }
+        }
+
+        function selectPayment(method, element) {
+            paymentMethod = method;
+            const parent = element.parentElement;
+            const cards = parent.querySelectorAll('.radio-card');
+            cards.forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            renderCheckoutList();
+        }
+
+        function clearInputError(inputEl) {
+            inputEl.classList.remove('input-error');
+            const errorBanner = document.getElementById('formErrorMsg');
+            if (errorBanner) errorBanner.style.display = 'none';
+        }
+
+        // ENVIAR PEDIDO PARA O WHATSAPP
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio.');
+                return;
+            }
+
+            const nameInput = document.getElementById('custName');
+            const aptoInput = document.getElementById('custApto');
+            const blockInput = document.getElementById('custBlock');
+            const errorBanner = document.getElementById('formErrorMsg');
+
+            const name = nameInput.value.trim();
+            const apto = aptoInput.value.trim();
+            const block = blockInput.value.trim();
+            
+            const obsInput = document.getElementById('custObs');
+            const obs = obsInput ? obsInput.value.trim() : '';
+
+            let hasError = false;
+            let firstInvalidInput = null;
+
+            if (!name) {
+                nameInput.classList.add('input-error');
+                hasError = true;
+                if (!firstInvalidInput) firstInvalidInput = nameInput;
+            } else {
+                nameInput.classList.remove('input-error');
+            }
+
+            if (!apto) {
+                aptoInput.classList.add('input-error');
+                hasError = true;
+                if (!firstInvalidInput) firstInvalidInput = aptoInput;
+            } else {
+                aptoInput.classList.remove('input-error');
+            }
+
+            if (!block) {
+                blockInput.classList.add('input-error');
+                hasError = true;
+                if (!firstInvalidInput) firstInvalidInput = blockInput;
+            } else {
+                blockInput.classList.remove('input-error');
+            }
+
+            if (hasError) {
+                if (errorBanner) errorBanner.style.display = 'block';
+                if (firstInvalidInput) firstInvalidInput.focus();
+                return;
+            }
+
+            if (errorBanner) errorBanner.style.display = 'none';
+
+            let totalSum = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+            if (paymentMethod === 'Cartão') {
+                totalSum *= 1.05;
+            }
+
+            let text = `🍹 *NOVO PEDIDO - BARISTTA DRINKS* 🍹\n`;
+            text += `----------------------------------------\n`;
+            text += `👤 *Cliente:* ${name}\n`;
+            text += `🏢 *Local:* Apto ${apto} ${block}\n`;
+            text += `💳 *Pagamento:* ${paymentMethod}${paymentMethod === 'Cartão' ? ' (inclui taxa de 5%)' : ''}\n`;
+            if (obs) {
+                text += `📝 *Obs:* ${obs}\n`;
+            }
+            text += `----------------------------------------\n`;
+            text += `📋 *ITENS DO PEDIDO:*\n\n`;
+
+            cart.forEach((item) => {
+                text += `*${item.qty}x ${item.title}*\n`;
+                Object.entries(item.selections).forEach(([key, val]) => {
+                    const optionName = typeof val === 'object' ? val.name : val;
+                    text += `   • ${optionName}\n`;
+                });
+                text += `   *Subtotal:* ${formatMoney(item.totalPrice)}\n\n`;
+            });
+
+            text += `----------------------------------------\n`;
+            text += `💰 *VALOR TOTAL:* ${formatMoney(totalSum)}\n`;
+            text += `----------------------------------------\n`;
+            text += `🛵 *Obrigado! Aguardo confirmação do pedido.*`;
+
+            const encodedText = encodeURIComponent(text);
+            const targetPhone = sellerPhone.replace(/\D/g, '');
+            const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodedText}`;
+
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
