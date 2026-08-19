@@ -54,10 +54,41 @@
         /* HEADER */
         header {
             text-align: center;
-            padding: 24px 16px 16px 16px;
+            padding: 16px 16px 12px 16px;
             border-bottom: 1px solid var(--card-border);
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+        }
+
+        /* #1 STATUS DA LOJA */
+        .store-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
+            transition: all 0.3s ease;
+        }
+
+        .store-status.open {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .store-status.closed {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        .store-status i {
+            font-size: 8px;
         }
 
         .brand-frame {
@@ -115,6 +146,78 @@
             gap: 4px;
             box-shadow: 0 2px 8px rgba(255, 100, 0, 0.4);
             margin-left: 6px;
+        }
+
+        /* #2 PESQUISA & #3 ATALHOS DE ROLAGEM */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 25px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-gold-hover);
+            box-shadow: 0 0 10px rgba(171, 47, 82, 0.3);
+        }
+
+        .shortcuts-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 2px 8px 2px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .shortcuts-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .shortcut-chip {
+            white-space: nowrap;
+            background: #1c1c1c;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+
+        .shortcut-chip:hover, .shortcut-chip:active {
+            background: rgba(171, 47, 82, 0.25);
+            border-color: var(--accent-gold-hover);
+            color: #fff;
         }
 
         .drink-card.sold-out {
@@ -184,11 +287,12 @@
             padding: 16px;
             position: relative;
             overflow: hidden;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s, border-color 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             display: flex;
             gap: 14px;
             align-items: flex-start;
+            scroll-margin-top: 20px;
         }
 
         .drink-card:active {
@@ -699,6 +803,13 @@
     <div class="container">
         <!-- HEADER -->
         <header>
+            <!-- #1 INFORMAÇÃO DISCRETA DE STATUS DA LOJA -->
+            <div>
+                <div class="store-status" id="storeStatusBadge">
+                    <i class="fa-solid fa-circle"></i> Verificando status...
+                </div>
+            </div>
+
             <div class="brand-frame">
                 <div class="brand-title">Baristta</div>
                 <div class="brand-subtitle">DRINKS</div>
@@ -708,6 +819,17 @@
                 <span class="badge-copao"><i class="fa-solid fa-glass-water-droplet"></i> MONTE SEU COPÃO DE 700ML</span>
             </div>
         </header>
+
+        <!-- #2 BARRA DE PESQUISA & #3 ATALHOS DE ROLAGEM -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar por drink, bebida ou ingrediente..." oninput="filterDrinks()">
+            </div>
+            <div class="shortcuts-scroll" id="shortcutsContainer">
+                <!-- Atalhos de rolagem carregados dinamicamente via JS -->
+            </div>
+        </div>
 
         <!-- MENU GRID (CARREGADO DINAMICAMENTE PELO JS) -->
         <div class="menu-grid" id="menuGrid"></div>
@@ -720,7 +842,7 @@
                 <span class="cart-count" id="cartCount">0 itens selecionados</span>
                 <span class="cart-total" id="cartTotal">R$ 0,00</span>
             </div>
-            <button class="btn-view-cart" onclick="openCheckoutModal()">
+            <button class="btn-view-cart" id="btnCartCheckout" onclick="openCheckoutModal()">
                 <i class="fa-brands fa-whatsapp"></i> Ver Pedido
             </button>
         </div>
@@ -835,6 +957,15 @@
 
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
+        /* 
+           ==========================================================================
+           #1 CONFIGURAÇÃO DE STATUS DA LOJA (ALTERE AQUI A QUALQUER MOMENTO)
+           true  = Loja Aberta (aceitando pedidos normalmente)
+           false = Loja Fechada (apenas visualização do cardápio)
+           ==========================================================================
+        */
+        const IS_STORE_OPEN = true;
+
         /* 
            ==========================================================================
            FONTE ÚNICA DE DADOS DO CARDÁPIO (MENU_DATA)
@@ -955,7 +1086,7 @@
                         options: [
                             { name: "Watermelon (Melancia)", price: 20.00, popular: false, soldOut: false },
                             { name: "Strawberry (Morango)", price: 20.00, popular: false, soldOut: false },
-                             { name: "Tradicional (Dry)", price: 20.00, popular: false, soldOut: true },
+                            { name: "Tradicional (Dry)", price: 20.00, popular: false, soldOut: true },
                             { name: "Sicilian Lemon (Limão Siciliano)", price: 20.00, popular: false, soldOut: true }
                         ]
                     },
@@ -1059,10 +1190,80 @@
 
         // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', () => {
+            renderStoreStatus();
+            renderShortcuts();
             renderMenuGrid();
             updateCartBar();
             document.getElementById('sellerPhoneInput').value = sellerPhone;
         });
+
+        // #1 EXIBE O STATUS DA LOJA NA PARTE SUPERIOR
+        function renderStoreStatus() {
+            const badge = document.getElementById('storeStatusBadge');
+            if (!badge) return;
+
+            if (IS_STORE_OPEN) {
+                badge.className = 'store-status open';
+                badge.innerHTML = '<i class="fa-solid fa-circle"></i> Aberto Agora';
+            } else {
+                badge.className = 'store-status closed';
+                badge.innerHTML = '<i class="fa-solid fa-circle"></i> Fechado no momento';
+            }
+        }
+
+        // #3 RENDERIZA OS ATALHOS DE ROLAGEM DINÂMICOS
+        function renderShortcuts() {
+            const container = document.getElementById('shortcutsContainer');
+            if (!container) return;
+
+            container.innerHTML = MENU_DATA.map(drink => `
+                <button class="shortcut-chip" onclick="scrollToDrink('${drink.id}')">
+                    <i class="fa-solid fa-glass-water"></i> ${drink.title}
+                </button>
+            `).join('');
+        }
+
+        // #3 AÇÃO DE ROLAR ATÉ O ITEM SELECIONADO
+        function scrollToDrink(drinkId) {
+            const el = document.getElementById(`drink-card-${drinkId}`);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                el.style.borderColor = 'var(--accent-gold-hover)';
+                el.style.boxShadow = '0 0 15px rgba(171, 47, 82, 0.5)';
+                setTimeout(() => {
+                    el.style.borderColor = 'var(--card-border)';
+                    el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                }, 1500);
+            }
+        }
+
+        // #2 FILTRAGEM DA BARRA DE PESQUISA
+        function filterDrinks() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!query) {
+                renderMenuGrid(MENU_DATA);
+                return;
+            }
+
+            const filtered = MENU_DATA.filter(drink => {
+                const titleMatch = drink.title.toLowerCase().includes(query);
+                const descMatch = (drink.desc || '').toLowerCase().includes(query);
+                const tagMatch = (drink.tags || []).some(t => t.toLowerCase().includes(query));
+                
+                // Pesquisa também nos nomes das opções
+                const optionsMatch = drink.groups.some(g => 
+                    g.options.some(opt => {
+                        const name = typeof opt === 'object' ? opt.name : opt;
+                        return name.toLowerCase().includes(query);
+                    })
+                );
+
+                return titleMatch || descMatch || tagMatch || optionsMatch;
+            });
+
+            renderMenuGrid(filtered);
+        }
 
         // HELPER: FORMATAÇÃO DE MOEDA
         function formatMoney(val) {
@@ -1085,20 +1286,34 @@
         }
 
         // RENDERIZA A LISTA PRINCIPAL DE PRODUTOS DINAMICAMENTE
-        function renderMenuGrid() {
+        function renderMenuGrid(items = MENU_DATA) {
             const container = document.getElementById('menuGrid');
             if (!container) return;
 
-            container.innerHTML = MENU_DATA.map(drink => {
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 32px; margin-bottom: 10px; opacity: 0.5;"></i>
+                        <p style="font-size: 13px;">Nenhum produto encontrado para a pesquisa.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = items.map(drink => {
                 const minPrice = getMinDrinkPrice(drink);
                 const badgeHtml = drink.badge 
                     ? `<span class="badge-popular"><i class="fa-solid fa-fire"></i>${drink.badge}</span>` 
                     : '';
                 const tagsHtml = (drink.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
-                const btnText = drink.buttonText || "Montar";
+                
+                // Desabilita botões caso a loja esteja fechada
+                const btnText = !IS_STORE_OPEN ? "Loja Fechada" : (drink.buttonText || "Montar");
+                const btnDisabled = !IS_STORE_OPEN ? "disabled" : "";
+                const btnClass = !IS_STORE_OPEN ? "btn-custom btn-disabled" : "btn-custom";
 
                 return `
-                    <div class="drink-card">
+                    <div class="drink-card" id="drink-card-${drink.id}">
                         <div class="drink-info">
                             <div class="drink-header">
                                 <div class="drink-name">
@@ -1111,8 +1326,8 @@
                             <div class="drink-tags">
                                 ${tagsHtml}
                             </div>
-                            <button class="btn-custom" onclick="openCustomizer('${drink.id}')">
-                                <i class="fa-solid fa-plus"></i> ${btnText}
+                            <button class="${btnClass}" ${btnDisabled} onclick="openCustomizer('${drink.id}')">
+                                <i class="fa-solid ${!IS_STORE_OPEN ? 'fa-store-slash' : 'fa-plus'}"></i> ${btnText}
                             </button>
                         </div>
                         <div class="drink-img-container">
@@ -1145,6 +1360,11 @@
 
         // CUSTOMIZADOR DE DRINKS
         function openCustomizer(drinkId) {
+            if (!IS_STORE_OPEN) {
+                alert('A loja está fechada no momento.');
+                return;
+            }
+
             const drink = MENU_DATA.find(item => item.id === drinkId);
             if (!drink) return;
 
@@ -1281,9 +1501,25 @@
 
             document.getElementById('cartCount').innerText = `${totalQty} ${totalQty === 1 ? 'item selecionado' : 'itens selecionados'}`;
             document.getElementById('cartTotal').innerText = formatMoney(totalPrice);
+
+            const btnCheckout = document.getElementById('btnCartCheckout');
+            if (btnCheckout) {
+                if (!IS_STORE_OPEN) {
+                    btnCheckout.disabled = true;
+                    btnCheckout.classList.add('btn-disabled');
+                } else {
+                    btnCheckout.disabled = false;
+                    btnCheckout.classList.remove('btn-disabled');
+                }
+            }
         }
 
         function openCheckoutModal() {
+            if (!IS_STORE_OPEN) {
+                alert('A loja está fechada no momento.');
+                return;
+            }
+
             if (cart.length === 0) {
                 alert('Seu carrinho está vazio! Adicione ao menos um drink para ver o pedido.');
                 return;
@@ -1368,6 +1604,11 @@
 
         // ENVIAR PEDIDO PARA O WHATSAPP
         function sendWhatsAppOrder() {
+            if (!IS_STORE_OPEN) {
+                alert('A loja está fechada no momento.');
+                return;
+            }
+
             if (cart.length === 0) {
                 alert('Seu carrinho está vazio.');
                 return;
