@@ -816,7 +816,7 @@
                 <div class="brand-subtitle">- Reserva Raposo -</div>
             </div>
             <div>
-                <span class="badge-copao"><i class="fa-solid fa-glass-water-droplet"></i> MONTE SEU COPÃO DE 700ML</span>
+                <span class="badge-copao"><i class="fa-solid fa-glass-water-droplet"></i> MONTE SEU COPÃO DE 700ML E MUITO +</span>
             </div>
         </header>
 
@@ -917,7 +917,7 @@
                         <label>Forma de Pagamento</label>
                         <div class="radio-options">
                             <div class="radio-card selected" onclick="selectPayment('PIX', this)">PIX</div>
-                            <div class="radio-card" onclick="selectPayment('Cartão', this)">Cartão <span style="font-size: 8px; display: block; opacity: 0.7; margin-top: 2px;">(+5%)</span></div>
+                            <div class="radio-card" onclick="selectPayment('Cartão', this)">Cartão</div>
                             <div class="radio-card" onclick="selectPayment('Dinheiro', this)">Dinheiro</div>
                         </div>
                     </div>
@@ -1566,11 +1566,11 @@
 
             let total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
             if (paymentMethod === 'Cartão') {
-                total *= 1.05;
+                total *= 1.0;
             }
             html += `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-weight: 800; font-size: 16px; color: var(--text-main);">
-                    <span>TOTAL DO PEDIDO${paymentMethod === 'Cartão' ? ' (+5% Cartão)' : ''}:</span>
+                    <span>TOTAL DO PEDIDO:</span>
                     <span>${formatMoney(total)}</span>
                 </div>
             `;
