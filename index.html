@@ -1685,14 +1685,14 @@
 
             let totalSum = cart.reduce((sum, item) => sum + item.totalPrice, 0);
             if (paymentMethod === 'Cartão') {
-                totalSum *= 1.05;
+                totalSum *= 1.00;
             }
 
             let text = `🍹 *NOVO PEDIDO - BARISTTA DRINKS* 🍹\n`;
             text += `----------------------------------------\n`;
             text += `👤 *Cliente:* ${name}\n`;
             text += `🏢 *Local:* Apto ${apto} ${block}\n`;
-            text += `💳 *Pagamento:* ${paymentMethod}${paymentMethod === 'Cartão' ? ' (inclui taxa de 5%)' : ''}\n`;
+            text += `💳 *Pagamento:* ${paymentMethod}${paymentMethod === 'Cartão' ? '' : ''}\n`;
             if (obs) {
                 text += `📝 *Obs:* ${obs}\n`;
             }
